@@ -9,6 +9,8 @@
 // @grant        none
 // ==/UserScript==
 
+// Edit test
+
 function getCourseDescription(e) {
     let desc = e.querySelector('tr').textContent;
     let descriptionRegExp = /(?<name>[^([]*) (\(.*\) )?\[(?<type>(CM|TD|TP|EV|EDT))(-[\w.-]*)?\]/;
