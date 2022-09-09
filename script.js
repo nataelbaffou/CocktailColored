@@ -1,17 +1,20 @@
 // ==UserScript==
 // @name         Cocktail Colored
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      0.1.2
 // @description  A script that colors this wonderful timetable !
+// @updateURL    https://raw.githubusercontent.com/nataelbaffou/CocktailColored/main/script.js
+// @downloadURL  https://raw.githubusercontent.com/nataelbaffou/CocktailColored/main/script.js
 // @author       Nataël BAFFOU
 // @match        https://servif-cocktail.insa-lyon.fr/EdT/*.php
+// @match        https://servif.insa-lyon.fr/EdT/*.php
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=insa-lyon.fr
 // @grant        none
 // ==/UserScript==
 
-// Edit test
 
 function getCourseDescription(e) {
+    // Parse courses names
     let desc = e.querySelector('tr').textContent;
     let descriptionRegExp = /(?<name>[^([]*) (\(.*\) )?\[(?<type>(CM|TD|TP|EV|EDT))(-[\w.-]*)?\]/;
     let descriptionData = desc.match(descriptionRegExp)?.groups;
@@ -30,6 +33,7 @@ function rgbToHex(r, g, b) {
 }
 
 function createStyleSheet() {
+    // Add personal CSS to document
     var cssText = `
         /* The switch - the box around the slider */
 .switch {
@@ -103,15 +107,29 @@ function handleColorSwitchClick(e) {
 
 
 function addButtons() {
-    let mainBody = document.querySelector("html > body");
+    // Add some buttons to the html document
+    
+    // TOGGLE
     let toggleDiv = document.createElement('div');
     toggleDiv.style.cssText = 'position:fixed;top:0;left0;margin: 2px 2px 2px 30px;z-index:1;background-color: white;padding: 3px';
     toggleDiv.innerHTML = 'Type de cours<label class="switch"><input type="checkbox" id="color-switch"><span class="slider round"></span></label>Nom du cours';
     document.body.insertBefore(toggleDiv, document.querySelector("#calendar-panel"));
     document.getElementById("color-switch").addEventListener("click", handleColorSwitchClick, false);
+
+    // NAVIGATION
+    let changeClassDiv = document.createElement('div');
+    changeClassDiv.style.cssText = 'position:fixed;top:0;left0;margin: 2px 2px 2px 350px;z-index:1;background-color: white;padding: 3px';
+    changeClassDiv.innerHTML = ' \
+<button onclick="location.href=\'3IF.php\'">3IF</button> \
+<button onclick="location.href=\'4IF.php\'">4IF</button> \
+<button onclick="location.href=\'5IF.php\'">5IF</button> \
+<button onclick="location.href=\'3IFA.php\'">3IFA</button> \
+<button onclick="location.href=\'4IFA.php\'">4IFA</button>';
+    document.body.insertBefore(changeClassDiv, document.querySelector("#calendar-panel"));
 }
 
-function colorDocument(byCourseName, byCourseType) {
+function colorDocument(byCourseName) {
+    // Color all courses
     let headers = document.querySelectorAll('th');
     headers.forEach(e => e.style.backgroundColor = 'lightgray');
 
@@ -128,8 +146,9 @@ function colorDocument(byCourseName, byCourseType) {
     }
 }
 
+// MAIN
 (function() {
     createStyleSheet();
     addButtons();
-    colorDocument(false, false);
+    colorDocument(false);
 })();
